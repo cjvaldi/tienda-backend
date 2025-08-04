@@ -1,0 +1,5 @@
+# Archivos ignorados (ejemplo para Node.js/PHP)
+node_modules/
+.env
+.DS_Store
+vendor/
