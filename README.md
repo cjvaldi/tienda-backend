@@ -10,3 +10,10 @@ Backend para una tienda online (ejemplo).
 ## Tecnologías
 - Node.js/Express (o PHP, según tu stack).
 - MySQL/PostgreSQL.
+
+![alt text](image.png)
+
+erDiagram
+    usuarios ||--o{ pedidos : "1:N"
+    pedidos ||--o{ detalle_pedidos : "1:N"
+    productos ||--o{ detalle_pedidos : "1:N"
