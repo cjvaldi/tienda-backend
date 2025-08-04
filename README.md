@@ -3,19 +3,10 @@
 Backend para una tienda online (ejemplo).  
 
 ## Estructura del proyecto  
-/tienda-backend
-│
-├── public/               # Carpeta pública (index.php si lo necesitas)
-├── src/                  # Código fuente
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── config/
-│
-├── database/             # SQL o migraciones
-│   └── tienda_camisetas.sql
-│
-├── tests/                # Carpeta opcional para pruebas
-│
-├── README.md             # Documentación del proyecto
-└── .gitignore
+- `src/`: Lógica principal (controladores, modelos, rutas).
+- `database/`: Scripts SQL.
+- `public/`: Archivos accesibles públicamente.
+
+## Tecnologías
+- Node.js/Express (o PHP, según tu stack).
+- MySQL/PostgreSQL.
