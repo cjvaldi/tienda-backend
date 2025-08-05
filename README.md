@@ -11,9 +11,14 @@ Backend para una tienda online (ejemplo).
 - Node.js/Express (o PHP, según tu stack).
 - MySQL/PostgreSQL.
 
+## Diagrama
 ![alt text](image.png)
 
-erDiagram
-    usuarios ||--o{ pedidos : "1:N"
-    pedidos ||--o{ detalle_pedidos : "1:N"
-    productos ||--o{ detalle_pedidos : "1:N"
+## erDiagram
+- usuarios ||--o{ pedidos : "1:N"
+- pedidos ||--o{ detalle_pedidos : "1:N"
+- productos ||--o{ detalle_pedidos : "1:N"
+
+## Endpoint: 
+    GET /productos
+    POST /productos
