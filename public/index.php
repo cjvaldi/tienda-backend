@@ -7,3 +7,4 @@ if ($uri === '/productos') {
     http_response_code(404);
     echo json_encode(["mensaje" => "Ruta no encontrada"]);
 }
+// primer endpoint: GET /productos
