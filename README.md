@@ -22,3 +22,6 @@ Backend para una tienda online (ejemplo).
 ## Endpoint: 
     GET /productos
     POST /productos
+
+## Autor
+Cristian Jacson Valdivieso Valenzuela

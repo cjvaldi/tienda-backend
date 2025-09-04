@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
-// Se gestiona para el get inicial , ahiora se crean las funciones concretas
+// Se gestiona para el get inicial , ahora se crean las funciones concretas
 // require_once __DIR__ . '/../controllers/ProductoController.php';
 
 // $database = new Database();
@@ -9,32 +9,95 @@ require_once __DIR__ . '/../config/database.php';
 // $productoController = new ProductoController($db);
 // $productoController->obtenerTodos();
 
-function obtenerProductos(){
-    $db = getConnection();
-    $stmt = $db->query("SELECT * FROM productos");
-    $productos =$stmt->fetchAll(PDO::FETCH_ASSOC);
+// Lógica para GET
+function obtenerProductos()
+{
+    $database =  new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT * FROM productos";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     echo json_encode($productos);
 }
 
-function crearProducto(){
-    $db = getConnection();
-    $data = json_decode(file_get_contents("php://input"),true);
+// Lógica para POST
+function crearProducto()
+{
+    // Obtener datos del cuerpo de la petición
+    $data = Json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($data['nombre'],$data['descripcion'],$data['precio'],$data['stock'])){
+    if (
+        !isset($data['nombre']) ||
+        !isset($data['descripcion']) ||
+        !isset($data['precio']) ||
+        !isset($data['stock'])
+    ) {
         http_response_code(400);
-        echo json_encode(["mensaje"=>"Faltan campos requeridos"]);
+        echo json_encode(["mensaje" => "Datos incompletos"]);
         return;
     }
 
-    $stmt= $db->prepare("INSERT INTO productos (nombre, descripcion, precio, stock) VALUES (?,?,?,?)");
-    $stmt->execute([
-        $data['nombre'],
-        $data['descripcion'],
-        $data['precio'],
-        $data['stock']
-    ]);
+    $nombre = htmlspecialchars(strip_tags($data['nombre']));
+    $descripcion = htmlspecialchars(strip_tags($data['descripcion']));
+    $precio = floatval(($data['precio']));
+    $stock = intval(($data['stock']));
 
-    http_response_code(201);
-    echo json_encode(["mensaje"=>"Producto creado correctamente"]);
+    $database =  new Database();
+    $db = $database->getConnection();
 
+    $query =  "INSERT INTO productos (nombre, descripcion, precio, stock) 
+        VALUES (:nombre, :descripcion, :precio, :stock)";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':nombre', $nombre);
+    $stmt->bindParam(':descripcion', $descripcion);
+    $stmt->bindParam(':precio', $precio);
+    $stmt->bindParam(':stock', $stock);
+
+    if ($stmt->execute()) {
+        http_response_code(201);
+        echo json_encode(["mensaje" => "Producto creado correctamente"]);
+    } else {
+        http_response_code(response_code: 500);
+        echo json_encode(["mensaje" => "Error al crear el producto"]);
+    }
+    
 }
+
+
+
+
+// *********************************************************************************
+// usando la clase Database
+// function obtenerProductos(){
+//     $db = getConnection();
+//     $stmt = $db->query("SELECT * FROM productos");
+//     $productos =$stmt->fetchAll(PDO::FETCH_ASSOC);
+//     echo json_encode($productos);
+// }
+
+// function crearProducto(){
+//     $db = getConnection();
+//     $data = json_decode(file_get_contents("php://input"),true);
+
+//     if (!isset($data['nombre'],$data['descripcion'],$data['precio'],$data['stock'])){
+//         http_response_code(400);
+//         echo json_encode(["mensaje"=>"Faltan campos requeridos"]);
+//         return;
+//     }
+
+//     $stmt= $db->prepare("INSERT INTO productos (nombre, descripcion, precio, stock) VALUES (?,?,?,?)");
+//     $stmt->execute([
+//         $data['nombre'],
+//         $data['descripcion'],
+//         $data['precio'],
+//         $data['stock']
+//     ]);
+
+//     http_response_code(201);
+//     echo json_encode(["mensaje"=>"Producto creado correctamente"]);
+
+// }
