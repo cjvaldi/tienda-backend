@@ -67,7 +67,22 @@ function crearProducto()
     
 }
 
+function obtenerProductosPorId($id) {
+    $database = new Database();
+    $db = $database->getConnection();
 
+    $query = "SELECT id , nombre,descripcion, precio, stock FROM productos WHERE id = :id LIMIT 1";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(":id",$id);
+    $stmt->execute();
+
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo json_encode($row);
+    } else {
+        http_response_code(404);
+        echo json_encode(["mensaje" => "Producto no encontradp"]);
+    }
+}
 
 
 // *********************************************************************************
