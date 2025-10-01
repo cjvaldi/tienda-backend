@@ -26,6 +26,8 @@ if ($uri === '/productos') {
         obtenerProductosPorId($id);
     } elseif ($method === 'PUT') {
         actualizarProducto($id);
+    } elseif ($method === 'DELETE') {
+        eliminarProducto($id);
     } else {
         http_response_code(405);
         echo json_encode(["mensaje" => "Método no permitido"]);

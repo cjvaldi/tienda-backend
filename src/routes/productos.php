@@ -103,8 +103,8 @@ function actualizarProducto($id)
         echo json_encode(["mensaje" => "Datos incompletos"]);
         return;
     }
-     // mostrar los datos de $data
-     // Mostrar datos recibidos (para desarrollo)
+    // mostrar los datos de $data
+    // Mostrar datos recibidos (para desarrollo)
     // echo "<pre>";
     // print_r($data);
     // echo "</pre>";
@@ -129,6 +129,27 @@ function actualizarProducto($id)
     }
 }
 
+function eliminarProducto($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "DELETE FROM productos WHERE id = :id ";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(":id", $id);
+    if ($stmt->execute()) {
+        if ($stmt->rowCount() > 0) {
+            http_response_code(200);   // suele ser el código por defecto
+            echo json_encode(["mensaje" => "Producto eliminado"]);
+        } else {
+            http_response_code(404);
+            echo json_encode(["mensaje" => "Producto no encontradO"]);
+        }
+    } else {
+        http_response_code(500);
+        echo json_encode(["mensaje" => "Error al eliminar el producto"]);
+    }
+}
 // *********************************************************************************
 // usando la clase Database
 // function obtenerProductos(){
