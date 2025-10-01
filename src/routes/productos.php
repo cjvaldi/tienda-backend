@@ -64,19 +64,20 @@ function crearProducto()
         http_response_code(response_code: 500);
         echo json_encode(["mensaje" => "Error al crear el producto"]);
     }
-    
 }
 
-function obtenerProductosPorId($id) {
+function obtenerProductosPorId($id)
+{
     $database = new Database();
     $db = $database->getConnection();
 
     $query = "SELECT id , nombre,descripcion, precio, stock FROM productos WHERE id = :id LIMIT 1";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(":id",$id);
+    $stmt->bindParam(":id", $id);
     $stmt->execute();
 
     if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        http_response_code(200);   // suele ser el código por defecto
         echo json_encode($row);
     } else {
         http_response_code(404);
@@ -84,6 +85,49 @@ function obtenerProductosPorId($id) {
     }
 }
 
+function actualizarProducto($id)
+{
+    $database =  new Database();
+    $db = $database->getConnection();
+
+    // Recibir datos JSON
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (
+        !isset($data['nombre']) ||
+        !isset($data['descripcion']) ||
+        !isset($data['precio']) ||
+        !isset($data['stock'])
+    ) {
+        http_response_code(400);
+        echo json_encode(["mensaje" => "Datos incompletos"]);
+        return;
+    }
+     // mostrar los datos de $data
+     // Mostrar datos recibidos (para desarrollo)
+    // echo "<pre>";
+    // print_r($data);
+    // echo "</pre>";
+
+    $query =  "UPDATE productos 
+                SET nombre = :nombre, descripcion=:descripcion, precio=:precio, stock =:stock 
+                WHERE id = :id";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(":nombre", $data['nombre']);
+    $stmt->bindParam(":descripcion", $data['descripcion']);
+    $stmt->bindParam(':precio', $data['precio']);
+    $stmt->bindParam(':stock', $data['stock']);
+    $stmt->bindParam(':id', $id);
+
+    if ($stmt->execute()) {
+        // http_response_code(200);
+        echo json_encode(["mensaje" => "Producto actualizado correctamente"]);
+    } else {
+        http_response_code(response_code: 500);
+        echo json_encode(["mensaje" => "Error al actualizar"]);
+    }
+}
 
 // *********************************************************************************
 // usando la clase Database
