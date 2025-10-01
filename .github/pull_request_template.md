@@ -15,6 +15,9 @@ Incluye el desarrollo completo del CRUD para la entidad **productos** en la API 
 1. Levantar el servidor con:  
    ```bash
    php -S localhost:8000 -t public
+   ó
+   desde la carpeta public
+   php -S localhost:8000 index.php
    ```
 
 2. Importar la colección de Postman incluida en `/docs/postman_collection.json`
